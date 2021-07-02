@@ -323,7 +323,7 @@ public:
         while(true){
             /*在这里使用了两阶段的循环部分：
               1. 实现时序电路部分，即在每个周期初同步更新的信息。
-              2. 实现逻辑电路部分，即在每个周期中如ex、issue的部分
+              2. 实现组合电路部分，即在每个周期中如ex、issue的部分
               已在下面给出代码
             */
             run_rob();
@@ -333,13 +333,13 @@ public:
             }
             run_slbuffer();
             run_reservation();
+            run_regfile();
             run_inst_fetch_queue();
             update();
 
             run_ex();
             run_issue();
             run_commit();
-            update();
         }
 
 	}
@@ -354,11 +354,18 @@ public:
         */
     }
 
+    void run_regfile(){
+        /*
+        每个寄存器会记录Q和V，含义参考ppt。这一部分会进行写寄存器，内容包括：根据issue和commit的通知修改对应寄存器的Q和V。
+        tip: 请注意issue和commit同一个寄存器时的情况
+        */
+    }
+
     void run_issue(){
         /*
         在这一部分你需要完成的工作：
         1. 从run_inst_fetch_queue()中得到issue的指令
-        2. 对于issue的所有类型的指令向ROB申请一个位置（或者也可以通过ROB预留位置），并修改regfile中相应的值
+        2. 对于issue的所有类型的指令向ROB申请一个位置（或者也可以通过ROB预留位置），并通知regfile修改相应的值
         2. 对于 非 Load/Store的指令，将指令进行分解后发到Reservation Station
           tip: 1. 这里需要考虑怎么得到rs1、rs2的值，并考虑如当前rs1、rs2未被计算出的情况，参考书上内容进行处理
                2. 在本次作业中，我们认为相应寄存器的值已在ROB中存储但尚未commit的情况是可以直接获得的，即你需要实现这个功能
@@ -408,6 +415,8 @@ public:
            
            3）当队头ready且是store指令时，SLB会等待ROB的commit，commit之后会SLB执行这
            条store指令，包括计算地址和写内存，写完后将队头弹出。
+
+           4）同时SLBUFFER还需根据上个周期EX和SLBUFFER的计算结果遍历SLBUFFER进行数据的更新。
         */
     }
 
@@ -424,7 +433,7 @@ public:
     void run_commit(){
         /*
         在这一部分你需要完成的工作：
-        1. 根据ROB发出的信息更新寄存器的值，包括对应的ROB和是否被占用状态（注意考虑issue和commit同一个寄存器的情况）
+        1. 根据ROB发出的信息通知regfile修改相应的值，包括对应的ROB和是否被占用状态（注意考虑issue和commit同一个寄存器的情况）
         2. 遇到跳转指令更新pc值，并发出信号清空所有部分的信息存储（这条对于很多部分都有影响，需要慎重考虑）
         */
     }
