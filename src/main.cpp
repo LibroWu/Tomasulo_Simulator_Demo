@@ -11,9 +11,9 @@ int main(){
 //    std::ofstream out("out.txt");
 //	std::streambuf *default_buf=std::cout.rdbuf();
 //	std::cout.rdbuf( out.rdbuf() ); 
-	simulator ans;
-	ans.scan();
-	ans.run();
+	simulator console;
+	console.scan();
+	console.run();
 //    std::cout.rdbuf( default_buf );
 //	std::cin.rdbuf( backinbuf );    
 	return 0;

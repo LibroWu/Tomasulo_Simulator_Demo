@@ -10,309 +10,48 @@ private:
     //在这里保留了助教实现时使用的变量，仅供参考，可以随便修改，推荐全部删除。
 
     //mem
-    char *memory;
     
     //pc_fetch
     unsigned int pc;
 
     //regfile
-    unsigned int reg_prev[32];
-    unsigned int rob_prev[32];
-    bool busy_prev[32];
-
-    unsigned int reg_next[32]; //avoid wrong read
-    unsigned int rob_next[32];
-    bool busy_next[32];
 
     //inst_fetch_and_queue
-    unsigned int pc_fetch;
-
-    unsigned int head_fetch;
-    unsigned int tail_fetch;
-    unsigned int code_fetch[QUEUE_SIZE];
-
-    unsigned int code_issue_fetch;
-
-    bool stall_from_fetch_to_issue;
 
     //issue
-    bool stall_from_issue_to_slbuffer;
-    bool stall_from_issue_to_reservation;
-    bool stall_from_issue_to_rob;
-
-    bool issue_enable_prev;
-    bool issue_enable_next;
-
-    unsigned int rs1_from_issue_to_reservation;
-    unsigned int rs2_from_issue_to_reservation;
-    bool rs1_rdy_from_issue_to_reservation;
-    bool rs2_rdy_from_issue_to_reservation;
-    unsigned int rs1_rob_pos_from_issue_to_reservation;
-    unsigned int rs2_rob_pos_from_issue_to_reservation;
-    unsigned int imm_from_issue_to_reservation;
-    unsigned int opcode_from_issue_to_reservation;
-    unsigned int funct7_from_issue_to_reservation;
-    unsigned int funct3_from_issue_to_reservation;
-    unsigned int pc_fetch_from_issue_to_reservation;
-    unsigned int rob_pos_from_issue_to_reservation;
-
-    unsigned int rs1_from_issue_to_slbuffer;
-    unsigned int rs2_from_issue_to_slbuffer;
-    bool rs1_rdy_from_issue_to_slbuffer;
-    bool rs2_rdy_from_issue_to_slbuffer;
-    unsigned int rs1_rob_pos_from_issue_to_slbuffer;
-    unsigned int rs2_rob_pos_from_issue_to_slbuffer;
-    unsigned int imm_from_issue_to_slbuffer;
-    unsigned int opcode_from_issue_to_slbuffer;
-    unsigned int funct3_from_issue_to_slbuffer;
-    unsigned int rob_pos_from_issue_to_slbuffer;
-
-    bool rdy_from_issue_to_rob;
-    unsigned int regfile_pos_from_issue_to_rob;
-    unsigned int type_from_issue_to_rob;
-    unsigned int code_from_issue_to_rob;
 
     //reservation
-    bool full_from_reservation_to_issue;
-    
-    bool transmit_from_reservation_to_ex;
-    unsigned int rs1_from_reservation_to_ex;
-    unsigned int rs2_from_reservation_to_ex;
-    unsigned int imm_from_reservation_to_ex;
-    unsigned int pc_from_reservation_to_ex;
-    unsigned int opcode_from_reservation_to_ex;
-    unsigned int funct7_from_reservation_to_ex;
-    unsigned int funct3_from_reservation_to_ex;
-    unsigned int rob_pos_from_reservation_to_ex;
-
-    bool RS_in_use[16];
-    unsigned int RS_opcode[16];
-    unsigned int RS_imm[16];
-    unsigned int RS_funct7[16];
-    unsigned int RS_funct3[16];
-    bool RS_rs1_ready[16];
-    bool RS_rs2_ready[16];
-    unsigned int RS_rs1_data[16];
-    unsigned int RS_rs2_data[16];
-    unsigned int RS_rs1_ROB[16];
-    unsigned int RS_rs2_ROB[16];
-    unsigned int RS_rd_ROB[16];
-    unsigned int RS_pc[16];
 
     //ex
-    bool transmit_cdb;
-    unsigned int rob_pos_cdb;
-    unsigned int data_cdb;
-    unsigned int jump_addr_cdb;
-    bool jump_cdb;
-
 
     //slbuffer
-    bool full_from_slbuffer_to_issue;
-    bool transmit_cdb_sl_prev;
-    bool transmit_cdb_sl_next;
-    unsigned int rob_pos_cdb_sl_prev;
-    unsigned int rob_pos_cdb_sl_next;
-    unsigned int data_cdb_sl_prev;
-    unsigned int data_cdb_sl_next;
-
-
-    unsigned int head_of_rob_slbuffer, tail_slbuffer, head_of_ram_rw_slbuffer;
-    unsigned int rs1_data_slbuffer[32];
-    unsigned int rs2_data_slbuffer[32];
-    bool rs1_ready_slbuffer[32];
-    bool rs2_ready_slbuffer[32];
-    unsigned int rs1_rob_slbuffer[32];
-    unsigned int rs2_rob_slbuffer[32];
-    unsigned int imm_slbuffer[32];
-    unsigned int funct3_slbuffer[32];
-    unsigned int opcode_slbuffer[32];
-    unsigned int rob_slbuffer[32];
-
 
     //rob
-    bool full_from_rob_to_issue;
-    unsigned int allocated_pos_from_rob_to_issue;
-    bool transmit_from_rob_to_commit;
-    unsigned int rob_pos_from_rob_to_commit;
-    unsigned int regfile_pos_from_rob_to_commit;
-    unsigned int data_from_rob_to_commit;
-    unsigned int jump_addr_from_rob_to_commit;
-    unsigned int type_from_rob_to_commit;
-    bool jump_from_rob_to_commit;
-    bool transmit_from_rob_to_slbuffer;
-
-    unsigned int code[32];
-    unsigned int code_from_rob_to_commit;
-    
-    unsigned int write_data[32];
-    unsigned int jump_addr[32];
-    bool jump[32];
-    unsigned int write_addr[32];
-    unsigned int type[32];
-    bool ready[32];
-    unsigned int head_rob;
-    unsigned int tail_rob;
-    unsigned int head_ensure_rob;
-
+	
     //commit
-    bool flush_from_commit;
-    bool transmit_from_commit_to_rob;
-    unsigned int jump_addr_from_commit_to_fetch;
-
+	
 public:
 	simulator(){
         //memory
-        memory = new char[mem_size];
-        for(int i = 0; i < mem_size; ++i){
-            memory[i] = 0;
-        }
 
         //pc
         pc = 0;
 
         //regfile
-        memset(reg_prev, 0, sizeof(reg_prev));
-        memset(rob_prev, 0, sizeof(rob_prev));
-        memset(busy_prev, 0, sizeof(busy_prev));
-        memset(reg_next, 0, sizeof(reg_prev));
-        memset(rob_next, 0, sizeof(rob_prev));
-        memset(busy_next, 0, sizeof(busy_prev));
 
         //inst_fetch_and_queue
-        pc_fetch = 0;
-        head_fetch = 0;
-        tail_fetch = 0;
-        memset(code_fetch, 0, sizeof(code_fetch));
-        code_issue_fetch = 0;
-        stall_from_fetch_to_issue = true;
 
         //issue
-        stall_from_issue_to_slbuffer = true;
-        stall_from_issue_to_reservation = true;
-        stall_from_issue_to_rob = true;
-
-        issue_enable_prev = false;
-        issue_enable_next = false;
-
-        rs1_from_issue_to_reservation = 0;
-        rs2_from_issue_to_reservation = 0;
-        rs1_rdy_from_issue_to_reservation = false;
-        rs2_rdy_from_issue_to_reservation = false;
-        rs1_rob_pos_from_issue_to_reservation = 0;
-        rs2_rob_pos_from_issue_to_reservation = 0;
-        imm_from_issue_to_reservation = 0;
-        opcode_from_issue_to_reservation = 0;
-        funct7_from_issue_to_reservation = 0;
-        funct3_from_issue_to_reservation = 0;
-        pc_fetch_from_issue_to_reservation = 0;
-        rob_pos_from_issue_to_reservation = 0;
-
-        rs1_from_issue_to_slbuffer = 0;
-        rs2_from_issue_to_slbuffer = 0;
-        rs1_rdy_from_issue_to_slbuffer = false;
-        rs2_rdy_from_issue_to_slbuffer = false;
-        rs1_rob_pos_from_issue_to_slbuffer = 0;
-        rs2_rob_pos_from_issue_to_slbuffer = 0;
-        imm_from_issue_to_slbuffer = 0;
-        opcode_from_issue_to_slbuffer = 0;
-        funct3_from_issue_to_slbuffer = 0;
-        rob_pos_from_issue_to_slbuffer = 0;
-
-        rdy_from_issue_to_rob = false;
-        regfile_pos_from_issue_to_rob = 0;
-        type_from_issue_to_rob = 0;
-        code_from_issue_to_rob = 0;
 
         //reservation
-        full_from_reservation_to_issue = false;
-    
-        transmit_from_reservation_to_ex = false;
-        rs1_from_reservation_to_ex = 0;
-        rs2_from_reservation_to_ex = 0;
-        imm_from_reservation_to_ex = 0;
-        pc_from_reservation_to_ex = 0;
-        opcode_from_reservation_to_ex = 0;
-        funct7_from_reservation_to_ex = 0;
-        funct3_from_reservation_to_ex = 0;
-        rob_pos_from_reservation_to_ex = 0;
-
-        memset(RS_in_use, false, sizeof(RS_in_use));
-        memset(RS_opcode, 0, sizeof(RS_opcode));
-        memset(RS_imm, 0, sizeof(RS_imm));
-        memset(RS_funct7, 0, sizeof(RS_funct7));
-        memset(RS_funct3, 0, sizeof(RS_funct3));
-        memset(RS_rs1_ready, false, sizeof(RS_rs1_ready));
-        memset(RS_rs2_ready, false, sizeof(RS_rs2_ready));
-        memset(RS_rs1_data, 0, sizeof(RS_rs1_data));
-        memset(RS_rs2_data, 0, sizeof(RS_rs2_data));
-        memset(RS_rs1_ROB, -1, sizeof(RS_rs1_ROB));
-        memset(RS_rs2_ROB, -1, sizeof(RS_rs2_ROB));
-        memset(RS_rd_ROB, -1, sizeof(RS_rd_ROB));
-        memset(RS_pc, 0, sizeof(RS_pc));
 
         //ex
-        transmit_cdb = false;
-        rob_pos_cdb = 0;
-        data_cdb = 0;
-        jump_addr_cdb = 0;
-        jump_cdb = false;
 
         //slbuffer
-        full_from_slbuffer_to_issue = 0;
-        transmit_cdb_sl_prev = false;
-        transmit_cdb_sl_next = false;
-        rob_pos_cdb_sl_prev = 0;
-        rob_pos_cdb_sl_next = 0;
-        data_cdb_sl_prev = 0;
-        data_cdb_sl_next = 0;
-
-        head_of_rob_slbuffer = 0;
-        tail_slbuffer = 0;
-        head_of_ram_rw_slbuffer = 0;
-        memset(rs1_data_slbuffer, 0, sizeof(rs1_data_slbuffer));
-        memset(rs2_data_slbuffer, 0, sizeof(rs2_data_slbuffer));
-        memset(rs1_ready_slbuffer, false, sizeof(rs1_ready_slbuffer));
-        memset(rs2_ready_slbuffer, false, sizeof(rs2_data_slbuffer));
-        memset(rs1_rob_slbuffer, -1 ,sizeof(rs1_rob_slbuffer));
-        memset(rs2_rob_slbuffer, -1, sizeof(rs2_rob_slbuffer));
-        memset(imm_slbuffer, 0, sizeof(imm_slbuffer));
-        memset(funct3_slbuffer, 0, sizeof(funct3_slbuffer));
-        memset(opcode_slbuffer, 0, sizeof(opcode_slbuffer));
-        memset(rob_slbuffer, -1, sizeof(rob_slbuffer));
-
-
 
         //rob
-        full_from_rob_to_issue = false;
-        allocated_pos_from_rob_to_issue = 0;
-        transmit_from_rob_to_commit = false;
-        rob_pos_from_rob_to_commit = 0;
-        regfile_pos_from_rob_to_commit = 0;
-        data_from_rob_to_commit = 0;
-        jump_addr_from_rob_to_commit = 0;
-        type_from_rob_to_commit = 0;
-        jump_from_rob_to_commit = false;
-        transmit_from_rob_to_slbuffer = false;
-
-        memset(code, 0, sizeof(code));
-        code_from_rob_to_commit = 0;
-
-        memset(write_data, 0, sizeof(write_data));
-        memset(jump_addr, 0, sizeof(jump_addr));
-        memset(jump, false, sizeof(jump));
-        memset(write_addr, 0, sizeof(write_addr));
-        memset(type, 0, sizeof(type));
-        memset(ready, false, sizeof(ready));
-        
-        head_rob = 0;
-        tail_rob = 0;
-        head_ensure_rob = 0;
 
         //commit
-        flush_from_commit = false;
-        transmit_from_commit_to_rob = false;
-        jump_addr_from_commit_to_fetch = 0;
 
 	}
 	void scan(){
@@ -326,20 +65,20 @@ public:
               2. 实现逻辑电路部分，即在每个周期中如ex、issue的部分
               已在下面给出代码
             */
-            run_rob();
-            if(code_from_rob_to_commit == 0x0ff00513){
+            update();
+			
+			run_rob();
+            /*if(code_from_rob_to_commit == 0x0ff00513){
                 std::cout << std::dec << ((unsigned int)reg_prev[10] & 255u);
                 break;
-            }
+            }*/
             run_slbuffer();
             run_reservation();
             run_inst_fetch_queue();
-            update();
-
+			
             run_ex();
             run_issue();
             run_commit();
-            update();
         }
 
 	}
